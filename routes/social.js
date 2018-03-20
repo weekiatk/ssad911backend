@@ -2,39 +2,12 @@ var express = require('express');
 var router = express.Router();
 var qp = require('flexqp-transaction');
 qp.presetConnection(require('../dbconfig.json'));
+var crypto = require('crypto');
 
 router.get('/', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_result = await qp.execute('SELECT * FROM ssad_db.Incidents', [], connection);
-        await qp.commitAndCloseConnection(connection);
-        res.json(result_result);
-    }
-    catch (error) {
-        qp.rollbackAndCloseConnection(connection);
-        error.status = 406;
-        next(error);
-    }
-});
-
-router.post('/filter_time', async function (req, res, next) {
-    try {
-        var connection = await qp.connectWithTbegin();
-        var result_result = await qp.execute('SELECT * FROM ssad_db.Incidents WHERE DATETIME > ? AND DATETIME < ?', [req.body.start, req.body.end], connection);
-        await qp.commitAndCloseConnection(connection);
-        res.json(result_result);
-    }
-    catch (error) {
-        qp.rollbackAndCloseConnection(connection);
-        error.status = 406;
-        next(error);
-    }
-});
-
-router.post('/filter_cat', async function (req, res, next) {
-    try {
-        var connection = await qp.connectWithTbegin();
-        var result_result = await qp.execute('SELECT * FROM ssad_db.Incidents WHERE Type_Emergency = ?', [req.body.category], connection);
+        var result_result = await qp.execute('SELECT * FROM ssad_db.SMALogs', [], connection);
         await qp.commitAndCloseConnection(connection);
         res.json(result_result);
     }
@@ -48,7 +21,7 @@ router.post('/filter_cat', async function (req, res, next) {
 router.post('/create', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_insert = await qp.execute('insert into ssad_db.Incidents set ?', [req.body], connection);
+        var result_insert = await qp.execute('insert into ssad_db.SMALogs set ?', [req.body], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
         result.changedRows = result_insert.changedRows;
