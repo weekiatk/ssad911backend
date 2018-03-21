@@ -47,6 +47,7 @@ router.post('/filter_cat', async function (req, res, next) {
 
 router.post('/create', async function (req, res, next) {
     try {
+        var connection = await qp.connectWithTbegin();
         var result_insert = await qp.execute('insert into `911`.incidents set ?', [req.body], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
