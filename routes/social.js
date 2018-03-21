@@ -7,7 +7,7 @@ var crypto = require('crypto');
 router.get('/', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_result = await qp.execute('SELECT * FROM ssad_db.SMALogs', [], connection);
+        var result_result = await qp.execute('SELECT * FROM 911.SMALogs', [], connection);
         await qp.commitAndCloseConnection(connection);
         res.json(result_result);
     }
@@ -21,7 +21,7 @@ router.get('/', async function (req, res, next) {
 router.post('/create', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_insert = await qp.execute('insert into ssad_db.SMALogs set ?', [req.body], connection);
+        var result_insert = await qp.execute('insert into 911.SMALogs set ?', [req.body], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
         result.changedRows = result_insert.changedRows;
