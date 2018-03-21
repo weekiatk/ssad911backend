@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var qp = require('flexqp-transaction');
 qp.presetConnection(require('../dbconfig.json'));
-var crypto = require('crypto');
 
 router.get('/', async function (req, res, next) {
     try {
