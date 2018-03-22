@@ -26,7 +26,7 @@ var config = {
     "accessTokenSecret": "Tr3MgYPM60lQu5cJ2qe21fDoyHNPqkOhC6TxnFuwS3Cqt"
 };
 var twitter = new module.exports.Twitter(config);
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3002;
 var server = app.listen(port, function () {
     console.log('Server running on port ' + port);
 });
