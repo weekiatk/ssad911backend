@@ -11,7 +11,12 @@ var users = require('./routes/users');
 var test = require('./routes/test');
 var incidents = require('./routes/incidents');
 var social = require('./routes/social');
+<<<<<<< HEAD
 var reports = require('./routes/reports');
+=======
+var twitterer = require('./routes/twitterer');
+var news = require('./routes/news');
+>>>>>>> 345bbf3513799deba5a1dccf2cae9ff5c9cf191c
 
 var app = express();
 
@@ -33,7 +38,12 @@ app.use('/users', users);
 app.use('/test', test);
 app.use('/incidents', incidents);
 app.use('/social', social);
+<<<<<<< HEAD
 app.use('/reports', reports);
+=======
+app.use('/twitterer', twitterer);
+app.use('/news', news);
+>>>>>>> 345bbf3513799deba5a1dccf2cae9ff5c9cf191c
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
