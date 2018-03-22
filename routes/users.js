@@ -18,6 +18,20 @@ router.get('/', async function (req, res, next) {
     }
 });
 
+router.post('/find', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        var result_result = await qp.execute('SELECT * FROM `911`.users WHERE Username = ?', [req.body.Username], connection);
+        await qp.commitAndCloseConnection(connection);
+        res.json(result_result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 router.post('/login', async function (req, res, next) {
   try {
     var connection = await qp.connectWithTbegin();
