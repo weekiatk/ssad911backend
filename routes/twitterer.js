@@ -15,7 +15,7 @@ var error = function (err, response, body) {
     console.log('ERROR [%s]', JSON.stringify(err));
 };
 var success = function (data) {
-    console.log('Data [%s]', data);
+    //console.log('Data [%s]', data);
 };
 
 // Consumer Keys & Tokens

@@ -11,17 +11,9 @@ var users = require('./routes/users');
 var test = require('./routes/test');
 var incidents = require('./routes/incidents');
 var social = require('./routes/social');
-<<<<<<< HEAD
 var reports = require('./routes/reports');
-<<<<<<< HEAD
-=======
 var twitterer = require('./routes/twitterer');
 var news = require('./routes/news');
->>>>>>> 345bbf3513799deba5a1dccf2cae9ff5c9cf191c
-=======
-var twitterer = require('./routes/twitterer');
-var news = require('./routes/news');
->>>>>>> 9d51039607d731314f84eccf1f3fadc5eb1e81d7
 
 var app = express();
 
@@ -43,17 +35,9 @@ app.use('/users', users);
 app.use('/test', test);
 app.use('/incidents', incidents);
 app.use('/social', social);
-<<<<<<< HEAD
 app.use('/reports', reports);
-<<<<<<< HEAD
-=======
 app.use('/twitterer', twitterer);
 app.use('/news', news);
->>>>>>> 345bbf3513799deba5a1dccf2cae9ff5c9cf191c
-=======
-app.use('/twitter',twitterer);
-app.use('/news', news);
->>>>>>> 9d51039607d731314f84eccf1f3fadc5eb1e81d7
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
