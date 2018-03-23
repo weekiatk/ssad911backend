@@ -52,6 +52,60 @@ router.post('/login', async function (req, res, next) {
   }
 });
 
+router.post('/delete', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        var result_insert = await qp.execute('delete from `911`.users WHERE id = ?', [req.body.id], connection);
+        let result = {};
+        result.affectedRows = result_insert.affectedRows;
+        result.changedRows = result_insert.changedRows;
+        result.fieldCount = result_insert.fieldCount;
+        result.insertId = result_insert.insertId;
+        result.message = result_insert.message;
+        result.protocol41 = result_insert.protocol41;
+        result.serverStatus = result_insert.serverStatus;
+        result.warningCount = result_insert.warningCount;
+        result.success = true;
+        await qp.commitAndCloseConnection(connection);
+        res.json(result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
+router.post('/update', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        const secret = 'abcdefg';
+        var pass = req.body.Password;
+        var hash = crypto.createHmac('sha256', secret)
+                     .update(pass)
+                     .digest('hex');
+        req.body.Password = hash;
+        var result_insert = await qp.execute('update `911`.users set Username = ?, Password = ?, Name = ?, JobID = ?, email = ? WHERE id = ?', [req.body.Username, req.body.Password, req.body.Name, req.body.JobID, req.body.Email, req.body.id], connection);
+        let result = {};
+        result.affectedRows = result_insert.affectedRows;
+        result.changedRows = result_insert.changedRows;
+        result.fieldCount = result_insert.fieldCount;
+        result.insertId = result_insert.insertId;
+        result.message = result_insert.message;
+        result.protocol41 = result_insert.protocol41;
+        result.serverStatus = result_insert.serverStatus;
+        result.warningCount = result_insert.warningCount;
+        result.success = true;
+        await qp.commitAndCloseConnection(connection);
+        res.json(result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 router.post('/create', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
