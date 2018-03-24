@@ -32,6 +32,20 @@ router.post('/find', async function (req, res, next) {
     }
 });
 
+router.post('/findid', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        var result_result = await qp.execute('SELECT * FROM `911`.users WHERE ID = ?', [req.body.ID], connection);
+        await qp.commitAndCloseConnection(connection);
+        res.json(result_result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 router.post('/login', async function (req, res, next) {
   try {
     var connection = await qp.connectWithTbegin();
@@ -79,13 +93,7 @@ router.post('/delete', async function (req, res, next) {
 router.post('/update', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        const secret = 'abcdefg';
-        var pass = req.body.Password;
-        var hash = crypto.createHmac('sha256', secret)
-                     .update(pass)
-                     .digest('hex');
-        req.body.Password = hash;
-        var result_insert = await qp.execute('update `911`.users set Username = ?, Password = ?, Name = ?, JobID = ?, Email = ? WHERE ID = ?', [req.body.Username, req.body.Password, req.body.Name, req.body.JobID, req.body.Email, req.body.ID], connection);
+        var result_insert = await qp.execute('update `911`.users set Username = ?, Name = ?, JobID = ?, Email = ? WHERE ID = ?', [req.body.Username, req.body.Name, req.body.JobID, req.body.Email, req.body.ID], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
         result.changedRows = result_insert.changedRows;
@@ -117,6 +125,7 @@ router.post('/resetPassword', async function (req, res, next) {
         req.body.Password = hash;
         var result_insert = await qp.execute('update `911`.users set Password = ? WHERE Username = ? AND Email = ?', [req.body.Password, req.body.Username, req.body.Email], connection);
         let result = {};
+        if (result_insert.affectedRows > 0){
         result.affectedRows = result_insert.affectedRows;
         result.changedRows = result_insert.changedRows;
         result.fieldCount = result_insert.fieldCount;
@@ -126,6 +135,7 @@ router.post('/resetPassword', async function (req, res, next) {
         result.serverStatus = result_insert.serverStatus;
         result.warningCount = result_insert.warningCount;
         result.success = true;
+        }
         await qp.commitAndCloseConnection(connection);
         res.json(result);
     }
