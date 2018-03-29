@@ -45,6 +45,25 @@ router.post('/filter_cat', async function (req, res, next) {
     }
 });
 
+router.post('/filter', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        var val = "(" + req.body.types + ")";
+        var start = req.body.start;
+        var end = req.body.end;
+        var querytest = 'SELECT * FROM `911`.incidents WHERE DATETIME > "' + start + '" AND DATETIME < "' + end + '" AND Type_Emergency IN ' + val;
+        console.log(querytest);
+        var result_insert = await qp.execute(querytest, [], connection);
+        await qp.commitAndCloseConnection(connection);
+        res.json(result_insert);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 router.post('/create', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
