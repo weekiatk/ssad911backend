@@ -74,7 +74,7 @@ router.post('/setEscalated', async function (req, res, next) {
 router.get('/CMO', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_get = await qp.execute('SELECT `911`.reports WHERE escalate = "2"', [], connection);
+        var result_get = await qp.execute('SELECT * FROM `911`.reports WHERE escalate = "2"', [], connection);
         var result_insert = await qp.execute('update `911`.reports set escalate = "3" WHERE escalate = "2"', [], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
