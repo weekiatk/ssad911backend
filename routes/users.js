@@ -114,6 +114,43 @@ router.post('/update', async function (req, res, next) {
     }
 });
 
+router.post('/changePassword', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        const secret = 'abcdefg';
+        var opass = req.body.oldpass;
+        var npass = req.body.newpass;
+        var hash = crypto.createHmac('sha256', secret)
+                     .update(opass)
+                     .digest('hex');
+        req.body.oldpass = hash;
+        var hash1 = crypto.createHmac('sha256', secret)
+                     .update(npass)
+                     .digest('hex');
+        req.body.newpass = hash1;
+        var result_insert = await qp.execute('update `911`.users set Password = ? WHERE ID = ? AND Password = ?', [req.body.newpass, req.body.ID, req.body.oldpass], connection);
+        let result = {};
+        if (result_insert.affectedRows > 0){
+        result.affectedRows = result_insert.affectedRows;
+        result.changedRows = result_insert.changedRows;
+        result.fieldCount = result_insert.fieldCount;
+        result.insertId = result_insert.insertId;
+        result.message = result_insert.message;
+        result.protocol41 = result_insert.protocol41;
+        result.serverStatus = result_insert.serverStatus;
+        result.warningCount = result_insert.warningCount;
+        result.success = true;
+        }
+        await qp.commitAndCloseConnection(connection);
+        res.json(result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 router.post('/resetPassword', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
