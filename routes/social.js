@@ -21,7 +21,7 @@ router.get('/', async function (req, res, next) {
 router.post('/create', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        let screenshot = req.files.Screenshot;
+        /*let screenshot = req.files.Screenshot;
         var url = '../screenshots/' + screenshot.name;
         await screenshot.mv(url, function (err) {
             if (err) {
@@ -29,7 +29,7 @@ router.post('/create', async function (req, res, next) {
             }
         });
         //console.log(screenshot);
-        req.body.Screenshots = url;
+        req.body.Screenshots = url;*/
         var result_insert = await qp.execute('insert into `911`.smalogs set ?', [req.body], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
