@@ -99,7 +99,11 @@ router.get('/CMO', async function (req, res, next) {
 router.post('/create', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_insert = await qp.execute('insert into `911`.reports set ?', [req.body], connection);
+        var val = req.body.text;
+        console.log(val);
+        var querytest = 'insert into `911`.reports (incident_id, caller_name, caller_number, level_of_priority, category, location, no_of_casualties, operator_id, operator_name, remarks) values ' + val;
+        console.log(querytest);
+        var result_insert = await qp.execute(querytest, [], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
         result.changedRows = result_insert.changedRows;

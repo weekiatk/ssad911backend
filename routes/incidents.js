@@ -6,7 +6,7 @@ qp.presetConnection(require('../dbconfig.json'));
 router.get('/', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_result = await qp.execute('SELECT * FROM `911`.incidents', [], connection);
+        var result_result = await qp.execute('SELECT `911`.incidents.ID,`911`.incidents.Name, Location, PostalCode, Type_Emergency, Phone_Num, Num_Casualties, Remarks, Pos_Prank, DATETIME, Operator_ID, LatLng, call_log, `911`.users.Name AS Operator_Name FROM `911`.incidents, `911`.users WHERE `911`.incidents.Operator_ID = `911`.users.ID', [], connection);
         await qp.commitAndCloseConnection(connection);
         res.json(result_result);
     }
