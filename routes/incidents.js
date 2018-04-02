@@ -49,9 +49,10 @@ router.post('/filter', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
         var val = "(" + req.body.types + ")";
+        var val2 = "(" + req.body.prank + ")";
         var start = req.body.start;
         var end = req.body.end;
-        var querytest = 'SELECT `911`.incidents.ID,`911`.incidents.Name, Location, PostalCode, Type_Emergency, Phone_Num, Num_Casualties, Remarks, Pos_Prank, DATETIME, Operator_ID, LatLng, call_log, `911`.users.Name AS Operator_Name FROM `911`.incidents, `911`.users WHERE `911`.incidents.Operator_ID = `911`.users.ID AND DATETIME > "' + start + '" AND DATETIME < "' + end + '" AND Type_Emergency IN ' + val;
+        var querytest = 'SELECT `911`.incidents.ID,`911`.incidents.Name, Location, PostalCode, Type_Emergency, Phone_Num, Num_Casualties, Remarks, Pos_Prank, DATETIME, Operator_ID, LatLng, call_log, `911`.users.Name AS Operator_Name FROM `911`.incidents, `911`.users WHERE `911`.incidents.Operator_ID = `911`.users.ID AND DATETIME > "' + start + '" AND DATETIME < "' + end + '" AND Pos_Prank IN ' + val2 + ' AND Type_Emergency IN ' + val;
         console.log(querytest);
         var result_insert = await qp.execute(querytest, [], connection);
         await qp.commitAndCloseConnection(connection);
