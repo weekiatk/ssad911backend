@@ -14,9 +14,9 @@ var bodyParser = require('body-parser');
 var error = function (err, response, body) {
     console.log('ERROR [%s]', JSON.stringify(err));
 };
-var success = function (data) {
-    //console.log('Data [%s]', data);
-};
+//var success = function (data) {
+//    console.log('Data [%s]', data);
+//};
 
 // Consumer Keys & Tokens
 var config = {
@@ -50,6 +50,23 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 //public is the folder application is in. - Handles routing
 app.use(express.static('public'));
 
+router.get('/', async function (req, res, next) {
+    try {
+        var success = function (data) {
+            var test = ('Data [%s]', data);
+            res.json(test);
+        };
+        twitter.getCustomApiCall('/trends/place.json',{ id: '23424948'}, error, success);
+        //console.log(info);
+        //res.json(info);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 
 //ENDPOINTS
 //authenticated request using my account 
@@ -77,5 +94,5 @@ app.post('/twitter/user/somebearcub', function (req, res) {
 
 });
 
-twitter.getCustomApiCall('/trends/place.json',{ id: '23424948'}, error, success);
+//twitter.getCustomApiCall('/trends/place.json',{ id: '23424948'}, error, success);
 module.exports = router;
