@@ -45,6 +45,20 @@ router.post('/filter_cat', async function (req, res, next) {
     }
 });
 
+router.post('/filter_id', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        var result_result = await qp.execute('SELECT * FROM `911`.incidents WHERE Operator_ID = ?', [req.body.Opid], connection);
+        await qp.commitAndCloseConnection(connection);
+        res.json(result_result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 router.post('/filter', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();

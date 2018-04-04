@@ -17,6 +17,34 @@ router.get('/', async function (req, res, next) {
     }
 });
 
+router.get('/deescalated', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        var result_result = await qp.execute('SELECT * FROM `911`.reports WHERE escalate = "1"', [], connection);
+        await qp.commitAndCloseConnection(connection);
+        res.json(result_result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
+router.get('/escalated', async function (req, res, next) {
+    try {
+        var connection = await qp.connectWithTbegin();
+        var result_result = await qp.execute('SELECT * FROM `911`.reports WHERE escalate IN (2,3)', [], connection);
+        await qp.commitAndCloseConnection(connection);
+        res.json(result_result);
+    }
+    catch (error) {
+        qp.rollbackAndCloseConnection(connection);
+        error.status = 406;
+        next(error);
+    }
+});
+
 router.post('/setRead', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
