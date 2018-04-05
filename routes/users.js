@@ -7,7 +7,7 @@ var crypto = require('crypto');
 router.get('/', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_result = await qp.execute('SELECT * FROM `911`.users', [], connection);
+        var result_result = await qp.execute('SELECT * FROM `911`.users WHERE active = 1', [], connection);
         await qp.commitAndCloseConnection(connection);
         res.json(result_result);
     }
@@ -55,7 +55,7 @@ router.post('/login', async function (req, res, next) {
                      .update(pass)
                      .digest('hex');
       req.body.Password = hash;
-        var result_result = await qp.execute('SELECT * FROM `911`.users WHERE Username = ? AND Password = ?', [req.body.Username, req.body.Password], connection);
+        var result_result = await qp.execute('SELECT * FROM `911`.users WHERE Username = ? AND Password = ? AND active = 1', [req.body.Username, req.body.Password], connection);
       await qp.commitAndCloseConnection(connection);
       res.json(result_result);
   }
@@ -69,7 +69,7 @@ router.post('/login', async function (req, res, next) {
 router.post('/delete', async function (req, res, next) {
     try {
         var connection = await qp.connectWithTbegin();
-        var result_insert = await qp.execute('delete from `911`.users WHERE ID = ?', [req.body.ID], connection);
+        var result_insert = await qp.execute('update `911`.users set active = 0 WHERE ID = ?', [req.body.ID], connection);
         let result = {};
         result.affectedRows = result_insert.affectedRows;
         result.changedRows = result_insert.changedRows;
@@ -160,7 +160,7 @@ router.post('/resetPassword', async function (req, res, next) {
                      .update(pass)
                      .digest('hex');
         req.body.Password = hash;
-        var result_insert = await qp.execute('update `911`.users set Password = ? WHERE Username = ? AND Email = ?', [req.body.Password, req.body.Username, req.body.Email], connection);
+        var result_insert = await qp.execute('update `911`.users set Password = ? WHERE Username = ? AND Email = ? AND active = 1', [req.body.Password, req.body.Username, req.body.Email], connection);
         let result = {};
         if (result_insert.affectedRows > 0){
         result.affectedRows = result_insert.affectedRows;
